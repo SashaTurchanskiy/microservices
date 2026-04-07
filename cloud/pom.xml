@@ -17,9 +17,9 @@
 
     <name>Cloud Infrastructure</name>
     <description>Aggregator for cloud infrastructure modules (Eureka, Config, Gateway)</description>
-    <modules>
+   <!-- <modules>
         <module>service-registry</module>
         <module>config-server</module>
         <module>api-gateway</module>
-    </modules>
+    </modules>-->
 </project>
