@@ -13,6 +13,11 @@
 	<name/>
 	<description/>
 	<dependencies>
+		<dependency>
+			<groupId>com.zosh</groupId>
+			<artifactId>common-lib</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
