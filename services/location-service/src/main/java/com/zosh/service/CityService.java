@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface CityService {
 
-    CityResponse createCity(CityRequest request);
+    CityResponse createCity(CityRequest request) throws Exception;
 
-    CityResponse getCityById(Long id);
+    CityResponse getCityById(Long id) throws Exception;
 
-    CityResponse updateCity(Long id, CityRequest request);
+    CityResponse updateCity(Long id, CityRequest request) throws Exception;
 
-    void deleteCity(Long id);
+    void deleteCity(Long id) throws Exception;
 
     Page<CityResponse> getAllCity(Pageable pageable);
 
@@ -25,5 +25,4 @@ public interface CityService {
 
     boolean cityExists(String cityCode);
 
-    boolean validateCityCode(String cityCode);
 }

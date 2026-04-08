@@ -1,5 +1,7 @@
 package com.zosh.service.impl;
 
+import com.zosh.mapper.CityMapper;
+import com.zosh.model.City;
 import com.zosh.payload.request.CityRequest;
 import com.zosh.payload.response.CityResponse;
 import com.zosh.repository.CityRepository;
@@ -16,47 +18,58 @@ public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
     @Override
-    public CityResponse createCity(CityRequest request) {
-        return null;
+    public CityResponse createCity(CityRequest request) throws Exception {
+        if (cityRepository.existsByCityCode(request.getCityCode())){
+            throw new Exception("city with given code already exist");
+        }
+        City city = CityMapper.toEntity(request);
+        City result = cityRepository.save(city);
+        return CityMapper.toResponse(result);
     }
 
     @Override
-    public CityResponse getCityById(Long id) {
-        return null;
+    public CityResponse getCityById(Long id) throws Exception {
+        City city = cityRepository.findById(id)
+                .orElseThrow(()-> new Exception("city not exit with given id"));
+        return CityMapper.toResponse(city);
     }
 
     @Override
-    public CityResponse updateCity(Long id, CityRequest request) {
-        return null;
+    public CityResponse updateCity(Long id, CityRequest request) throws Exception {
+        City city = cityRepository.findById(id)
+                .orElseThrow(()-> new Exception("city not exit with given id"));
+
+        if (cityRepository.existsByCityCode(request.getCityCode())){
+            throw new Exception("City already exists");
+        }
+        City updatedCity = CityMapper.updateCity(city, request);
+        return CityMapper.toResponse(updatedCity);
     }
 
     @Override
-    public void deleteCity(Long id) {
-
+    public void deleteCity(Long id) throws Exception {
+        City city = cityRepository.findById(id)
+                .orElseThrow(()-> new Exception("city not exit with given id"));
+        cityRepository.delete(city);
     }
 
     @Override
     public Page<CityResponse> getAllCity(Pageable pageable) {
-        return null;
+        return cityRepository.findAll(pageable).map(CityMapper::toResponse);
     }
 
     @Override
     public Page<CityResponse> searchCities(String keyword, Pageable pageable) {
-        return null;
+        return cityRepository.searchByKeyword(keyword, pageable).map(CityMapper::toResponse);
     }
 
     @Override
     public Page<CityResponse> getCitiesByCountryCode(String countryCode, Pageable pageable) {
-        return null;
+        return cityRepository.findByCountryCodeIgnoreCase(countryCode, pageable).map(CityMapper::toResponse);
     }
 
     @Override
     public boolean cityExists(String cityCode) {
-        return false;
-    }
-
-    @Override
-    public boolean validateCityCode(String cityCode) {
-        return false;
+        return cityRepository.existsByCityCode(cityCode);
     }
 }

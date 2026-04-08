@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface CityRepository extends JpaRepository<City, Long> {
 
     boolean existsByCityCode(String cityCode);
-    boolean existsByCityCodeAndId(String cityCode, Long id);
+    boolean existsByCityCodeAndIdNot(String cityCode, Long id);
     Page<City> findByCountryCodeIgnoreCase(String CountryCode, Pageable pageable);
 
     @Query("""
