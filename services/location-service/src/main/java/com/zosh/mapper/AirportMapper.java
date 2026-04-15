@@ -32,4 +32,21 @@ public class AirportMapper {
                 .geoCode(airport.getGeoCode())
                 .build();
     }
+
+    public static void updateEntity(Airport airport, AirportRequest request){
+        if (airport == null || request == null){return;}
+
+        if (request.getIataCode() != null){
+            airport.setIataCode(request.getIataCode());
+        }
+        if (request.getName() != null){
+            airport.setName(request.getName());
+        }
+        if (request.getAddress() != null){
+            airport.setAddress(request.getAddress());
+        }
+        if (request.getGeoCode() != null){
+            airport.setGeoCode(request.getGeoCode());
+        }
+    }
 }
