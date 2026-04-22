@@ -20,5 +20,5 @@ public class UserDTO {
     private String fullName;
     private String phone;
     private UserRole role;
-    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
 }
