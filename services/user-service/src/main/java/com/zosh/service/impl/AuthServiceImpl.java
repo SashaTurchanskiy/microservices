@@ -27,8 +27,22 @@ public class AuthServiceImpl implements AuthService {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
-    public AuthResponse login(String email, String password) {
-        return null;
+    public AuthResponse login(String email, String password) throws Exception {
+        Authentication authentication = authentication(email, password);
+
+            User user = userRepository.findByEmail(email);
+            user.setLastLoginAt(LocalDateTime.now());
+            userRepository.save(user);
+
+        String jwt = new JwtProvider().generateToken(authentication, user.getId());
+
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(jwt);
+        authResponse.setUser(UserMapper.toDTO(user));
+        authResponse.setTitle("Welcome " + user.getFullName() + "!");
+        authResponse.setMessage("Your account has been created successfully.");
+
+        return authResponse;
     }
 
     @Override
