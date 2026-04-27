@@ -40,5 +40,4 @@ public class AirlineRequest {
     private String supportEmail;
     private String supportPhone;
     private String supportHours;
-
 }
