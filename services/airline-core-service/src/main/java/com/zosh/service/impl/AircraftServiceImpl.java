@@ -55,12 +55,32 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public AircraftResponse updateAircraft(AirlineRequest request, Long ownerId) {
-        return null;
+    public AircraftResponse updateAircraft(Long id, AircraftRequest request, Long ownerId) throws Exception {
+        Airline airline = airlineRepository.findByOwnerId(ownerId)
+                .orElseThrow(()-> new Exception("This owner don`t have airline"));
+
+        Aircraft aircraft = aircraftRepository.findByIdAndAirlineId(id, airline.getId());
+        if (aircraft == null){
+            throw new Exception("Aircraft not exist with id");
+        }
+        if (request.getCode() != null
+                && !aircraft.getCode().equals(request.getCode())
+                && aircraftRepository.existsByCode(request.getCode())){
+            throw new Exception("Code already exist with another aircraft");
+        }
+        AircraftMapper.updateEntity(aircraft, request);
+        return AircraftMapper.toResponse(aircraftRepository.save(aircraft));
     }
 
     @Override
-    public void deleteAircraft(Long id, Long ownerId) {
+    public void deleteAircraft(Long id, Long ownerId) throws Exception {
+        Airline airline = airlineRepository.findByOwnerId(ownerId)
+                .orElseThrow(()-> new Exception("This owner don`t have airline"));
+        Aircraft aircraft = aircraftRepository.findByIdAndAirlineId(id, airline.getId());
+        if (aircraft == null) {
+            throw new Exception("Aircraft not exist with id");
+        }
+        aircraftRepository.delete(aircraft);
 
     }
 }

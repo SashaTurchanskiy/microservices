@@ -22,6 +22,8 @@ public class AirlineRequest {
     @Size(max = 3, message = "ICAO code must be at most 3 characters")
     private String icaoCode;
 
+    private String code;
+
     @NotBlank(message = "Name is required")
     private String name;
 
