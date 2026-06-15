@@ -5,6 +5,9 @@ import com.zosh.enums.AirlineStatus;
 import com.zosh.model.Airline;
 import com.zosh.payload.request.AirlineRequest;
 import com.zosh.payload.response.AirlineResponse;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 public class AirlineMapper {
 
@@ -22,6 +25,7 @@ public class AirlineMapper {
                 .alliance(request.getAlliance())
                 .headquartersCityId(request.getHeadquartersCityId())
                 .ownerId(ownerId)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         if (request.getSupportEmail()!=null
@@ -53,7 +57,7 @@ public class AirlineMapper {
                 .status(airline.getStatus())
                 .alliance(airline.getAlliance())
                 .support(airline.getSupport())
-                .createdAt(airline.getCreatedAt())
+                .createdAt(LocalDateTime.now())
                 .ownerId(airline.getOwnerId())
                 .updatedAt(airline.getUpdatedAt())
                 .updatedById(airline.getUpdatedById())

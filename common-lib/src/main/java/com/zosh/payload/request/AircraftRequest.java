@@ -34,6 +34,7 @@ public class AircraftRequest {
     @Positive(message = "Premium economy seats must be a positive integer")
     private Integer premiumEconomySeats;
 
+    @NotNull(message = "Business seats are required")
     @Positive(message = "Business seats must be a positive integer")
     private Integer businessSeats;
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Aircraft {
 
     @Id
@@ -77,8 +79,11 @@ public class Aircraft {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public Integer getTotalSeats(){
-        return economySeats + premiumEconomySeats + businessSeats + firstClassSeats;
+    public Integer getTotalSeats() {
+        return (economySeats != null ? economySeats : 0)
+                + (premiumEconomySeats != null ? premiumEconomySeats : 0)
+                + (businessSeats != null ? businessSeats : 0)
+                + (firstClassSeats != null ? firstClassSeats : 0);
     }
 
     public boolean isOperational(){
