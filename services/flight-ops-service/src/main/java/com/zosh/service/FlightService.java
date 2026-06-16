@@ -16,7 +16,7 @@ public interface FlightService {
                                                Long departureAirportId,
                                                Long arrivalAirportId,
                                                Pageable pageable);
-    FlightResponse getFlightById(Long id);
+    FlightResponse getFlightById(Long id) throws Exception;
 
     FlightResponse updatedFlight(Long id, FlightRequest request);
 
