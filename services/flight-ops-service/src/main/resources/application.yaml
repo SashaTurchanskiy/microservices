@@ -1,0 +1,15 @@
+server:
+  port: 5005
+
+spring:
+  application:
+    name: flight-ops-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/flight_db?useUnicode=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: qwer1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
