@@ -4,14 +4,19 @@ import com.zosh.enums.FlightStatus;
 import com.zosh.mapper.FlightMapper;
 import com.zosh.model.Flight;
 import com.zosh.payload.request.FlightRequest;
+import com.zosh.payload.response.AircraftResponse;
+import com.zosh.payload.response.AirlineResponse;
+import com.zosh.payload.response.AirportResponse;
 import com.zosh.payload.response.FlightResponse;
 import com.zosh.repository.FlightRepository;
 import com.zosh.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +25,22 @@ public class FlightServiceImpl implements FlightService {
     private final FlightRepository flightRepository;
 
     @Override
-    public FlightResponse createFlight(Long airlineId, FlightRequest request) {
-        return null;
+    public FlightResponse createFlight(Long airlineId, FlightRequest request) throws Exception {
+        if (flightRepository.existsByFlightNumber(request.getFlightNumber())){
+            throw new Exception("Flight already exists");
+        }
+
+        Flight flight = FlightMapper.toEntity(request);
+        flight.setAirlineId(request.getAirlineId());
+        return convertToFlightResponse(flightRepository.save(flight));
     }
 
     @Override
     public Page<FlightResponse> getFlightsByAirlineId(Long airlineId, Long departureAirportId, Long arrivalAirportId, Pageable pageable) {
-        return null;
+        return flightRepository.findByAirlineId(airlineId,
+                departureAirportId,
+                arrivalAirportId,
+                pageable).map(this::convertToFlightResponse);
     }
 
     @Override
@@ -34,7 +48,7 @@ public class FlightServiceImpl implements FlightService {
         Flight flight =  flightRepository.findById(id)
                 .orElseThrow(()-> new Exception("Flight with ID " + id + " not found."));
 
-        return FlightMapper.toFlightResponse(flightRepository.save(flight));
+        return convertToFlightResponse(flightRepository.save(flight));
     }
 
     @Override
@@ -50,5 +64,27 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public void deleteFlight(Long id) {
 
+    }
+
+    public FlightResponse convertToFlightResponse(Flight flight){
+        AircraftResponse aircraft = AircraftResponse.builder()
+                .id(flight.getAircraftId())
+                .build();
+        AirlineResponse airline = AirlineResponse.builder()
+                .id(flight.getAirlineId())
+                .build();
+        AirportResponse departureAirport = AirportResponse.builder()
+                .id(flight.getDepartureAirportId())
+                .build();
+        AirportResponse arrivalAirport = AirportResponse.builder()
+                .id(flight.getArrivalAirportId())
+                .build();
+        return FlightMapper.toFlightResponse(
+                flight,
+                departureAirport,
+                arrivalAirport,
+                aircraft,
+                airline
+        );
     }
 }
